@@ -1,0 +1,43 @@
+name: JavaScript tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/js.yml'
+      - 'yarn.lock'
+      - '**/*.json'
+      - '**/*.js'
+      - '**/*.ts'
+      - '**/*.tsx'
+  pull_request:
+    paths:
+      - '.github/workflows/js.yml'
+      - 'yarn.lock'
+      - '**/*.json'
+      - '**/*.js'
+      - '**/*.ts'
+      - '**/*.tsx'
+
+jobs:
+  js-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - name: Restore yarn workspaces
+        id: yarn-cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Install dependencies
+        run: yarn install
+      - name: Run tests
+        run: yarn test

@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig",
+  "compilerOptions": {
+    "paths": {
+      "react-native-webworker": ["../src/index"]
+    },
+  },
+  "include": [
+    "src",
+    "index.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
