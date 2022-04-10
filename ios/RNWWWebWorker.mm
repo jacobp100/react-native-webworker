@@ -59,7 +59,6 @@ RCT_EXPORT_METHOD(startThread:(nonnull NSNumber *)threadId
   // However, it reads the bundle URL at init, and will retain the previous
   // bundle URL if the delegate returns nil
   _threadUrl = [RCTBundleURLProvider.sharedSettings jsBundleURLForBundleRoot:name];
-  NSLog(@"THREAD %@", _threadUrl);
   RCTBridge *threadBridge = [[RCTBridge alloc] initWithDelegate:self
                                                   launchOptions:nil];
   _threadUrl = nil;
