@@ -1,26 +1,26 @@
-#import "RCTWebWorkerModule.h"
+#import "RNWWWebWorker.h"
 #import <React/RCTDevSettings.h>
 #include <stdlib.h>
 
 #import <React/RCTAppSetupUtils.h>
 
-#define RCT_NEW_ARCH_ENABLED 1
-
 #if RCT_NEW_ARCH_ENABLED
+#import "RNWWWebWorkerSpec.h"
+
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
 #import <ReactCommon/RCTTurboModuleManager.h>
 
-@interface RCTWebWorkerModule () <RCTCxxBridgeDelegate, RCTTurboModuleManagerDelegate>
+@interface RNWWWebWorker () <RCTCxxBridgeDelegate, RCTTurboModuleManagerDelegate>
 @end
 #endif
 
-@implementation RCTWebWorkerModule {
+@implementation RNWWWebWorker {
   NSMutableDictionary<NSNumber *, RCTBridge *> *_threads;
   NSURL *_threadUrl;
 }
 
-RCT_EXPORT_MODULE();
+RCT_EXPORT_MODULE(WebWorker);
 
 + (BOOL)requiresMainQueueSetup
 {
@@ -68,7 +68,7 @@ RCT_EXPORT_METHOD(startThread:(nonnull NSNumber *)threadId
   [[threadBridge moduleForClass:RCTDevSettings.class]
    setIsShakeToShowDevMenuEnabled:NO];
 
-  RCTSelfModule *threadSelf = [threadBridge moduleForClass:RCTSelfModule.class];
+  RNWWSelf *threadSelf = [threadBridge moduleForClass:RNWWSelf.class];
   threadSelf.threadId = threadId;
   threadSelf.delegate = self;
 
@@ -95,11 +95,11 @@ RCT_EXPORT_METHOD(postThreadMessage:(nonnull NSNumber *)threadId
     return;
   }
 
-  RCTSelfModule *threadSelf = [threadBridge moduleForClass:RCTSelfModule.class];
+  RNWWSelf *threadSelf = [threadBridge moduleForClass:RNWWSelf.class];
   [threadSelf postMessage:message];
 }
 
-- (void)didReceiveMessage:(RCTSelfModule *)sender
+- (void)didReceiveMessage:(RNWWSelf *)sender
                   message:(NSString *)message
 {
   id body = @{
@@ -110,7 +110,7 @@ RCT_EXPORT_METHOD(postThreadMessage:(nonnull NSNumber *)threadId
                      body:body];
 }
 
-- (void)didReceiveError:(RCTSelfModule *)sender
+- (void)didReceiveError:(RNWWSelf *)sender
                 message:(NSString *)message
 {
   id body = @{
@@ -121,13 +121,17 @@ RCT_EXPORT_METHOD(postThreadMessage:(nonnull NSNumber *)threadId
                      body:body];
 }
 
-
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
   return _threadUrl;
 }
 
 #if RCT_NEW_ARCH_ENABLED
+
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(const facebook::react::ObjCTurboModule::InitParams &)params
+{
+    return std::make_shared<facebook::react::NativeWebWorkerSpecJSI>(params);
+}
 
 #pragma mark - RCTCxxBridgeDelegate
 

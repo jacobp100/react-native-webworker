@@ -7,7 +7,7 @@ import { NativeModules, NativeEventEmitter } from 'react-native';
 const isTurboModuleEnabled = global.__turboModuleProxy != null;
 
 const WebWorkerModule = isTurboModuleEnabled
-  ? require('./specs/WebWorkerModule').default
+  ? require('./NativeWebWorker').default
   : NativeModules.WebWorkerModule;
 const ThreadEvents = new NativeEventEmitter(WebWorkerModule);
 

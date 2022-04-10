@@ -58,7 +58,7 @@
     "prettier": "^2.5.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-native": "0.0.0-20220213-2008-7cece3423",
+    "react-native": "0.68.0",
     "react-native-builder-bob": "^0.18.2",
     "react-test-renderer": "^17.0.2",
     "typescript": "^4.5.5"
@@ -87,7 +87,12 @@
   "codegenConfig": {
     "libraries": [
       {
-        "name": "WebWorker",
+        "name": "RNWWWebWorkerSpec",
+        "type": "modules",
+        "jsSrcsDir": "src"
+      },
+      {
+        "name": "RNWWSelfSpec",
         "type": "modules",
         "jsSrcsDir": "src"
       }

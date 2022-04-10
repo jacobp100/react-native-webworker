@@ -606,8 +606,9 @@ PODS:
   - React-logger (0.68.0):
     - glog
   - react-native-webworker (0.0.1):
-    - RCT-Folly
+    - RCT-Folly (= 2021.06.28.00-v2)
     - RCTRequired
+    - RCTTypeSafety
     - React
     - React-Codegen
     - React-CoreModules
@@ -883,7 +884,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 010a66edf644339f6da72b34208b070089680415
   React-jsinspector: 90f0bfd5d04e0b066c29216a110ffb9a6c34f23f
   React-logger: 8474fefa09d05f573a13c044cb0dfd751d4e52e3
-  react-native-webworker: 6f104dd024ff97a4cdb14cf03f34f86a28d4af69
+  react-native-webworker: b42a176ccb4a1d02cb2fcfbc853798baeb1c9cfc
   React-perflogger: 15cb741d6c2379f4d3fc8f9e4d4e1110ef3020cb
   React-RCTActionSheet: ea9099db0597bd769430db1e2d011fd5fdb7fc5e
   React-RCTAnimation: 252df4749866f2654f37612f839522cac91c1165

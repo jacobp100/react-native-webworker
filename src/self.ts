@@ -7,7 +7,7 @@ import { NativeModules, NativeEventEmitter } from 'react-native';
 const isTurboModuleEnabled = global.__turboModuleProxy != null;
 
 const SelfModule = isTurboModuleEnabled
-  ? require('./specs/SelfModule').default
+  ? require('./NativeSelf').default
   : NativeModules.SelfModule;
 const ThreadSelfManagerEvents = new NativeEventEmitter(SelfModule);
 

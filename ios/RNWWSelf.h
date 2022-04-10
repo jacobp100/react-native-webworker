@@ -1,14 +1,15 @@
 #import <React/RCTEventEmitter.h>
+#import <React/RCTBridgeModule.h>
 
-@protocol RCTSelfModuleDelegate <NSObject>
+@protocol RNWWSelfDelegate <NSObject>
 - (void)didReceiveMessage:(id)sender
                   message:(NSString *)message;
 - (void)didReceiveError:(id)sender
                 message:(NSString *)message;
 @end
 
-@interface RCTSelfModule : RCTEventEmitter
+@interface RNWWSelf : RCTEventEmitter <RCTBridgeModule>
 @property (nonatomic, strong) NSNumber *threadId;
-@property (nonatomic, weak) id<RCTSelfModuleDelegate> delegate;
+@property (nonatomic, weak) id<RNWWSelfDelegate> delegate;
 - (void)postMessage:(NSString *)message;
 @end

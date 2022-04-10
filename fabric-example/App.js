@@ -14,7 +14,6 @@ export default () => {
 
   useEffect(() => {
     return () => {
-      // worker.terminate();
       workerRef?.current.terminate();
       workerRef.current = undefined;
     };

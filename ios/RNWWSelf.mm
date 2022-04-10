@@ -1,12 +1,16 @@
-#import "RCTSelfModule.h"
+#import "RNWWSelf.h"
 #include <stdlib.h>
 
-@implementation RCTSelfModule {
+#if RCT_NEW_ARCH_ENABLED
+#import "RNWWSelfSpec.h"
+#endif
+
+@implementation RNWWSelf {
   // Messages queued here until the JS has loaded (lazily created)
   NSMutableArray<NSString *> *_pendingEvents;
 }
 
-RCT_EXPORT_MODULE();
+RCT_EXPORT_MODULE(Self);
 
 + (BOOL)requiresMainQueueSetup
 {
@@ -75,7 +79,7 @@ RCT_REMAP_METHOD(postMessage,
                  didReceiveMessage:(NSString *)message)
 {
   if (self.delegate == nil) {
-    NSLog(@"No parent bridge defined - abord sending thread message");
+    NSLog(@"ERROR: postMessage sent outside worker context");
     return;
   }
 
@@ -87,12 +91,20 @@ RCT_REMAP_METHOD(postError,
                  didReceiveError:(NSString *)message)
 {
   if (self.delegate == nil) {
-    NSLog(@"No parent bridge defined - abord sending thread error");
+    NSLog(@"ERROR: postMessage sent outside worker context");
     return;
   }
 
   [self.delegate didReceiveError:self
                          message:message];
 }
+
+#ifdef RCT_NEW_ARCH_ENABLED
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+    (const facebook::react::ObjCTurboModule::InitParams &)params
+{
+    return std::make_shared<facebook::react::NativeSelfSpecJSI>(params);
+}
+#endif
 
 @end
