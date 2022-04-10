@@ -1,5 +1,6 @@
-import { self } from 'react-native-webworker';
+import 'react-native';
+// import { self } from 'react-native-webworker';
 
-self.onmessage = ({ data }) => {
-  self.postMessage(`Message from worker: "${data}"!`);
-};
+// self.onmessage = ({ data }) => {
+//   self.postMessage(`Message from worker: "${data}"!`);
+// };

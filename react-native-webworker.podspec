@@ -15,37 +15,23 @@ Pod::Spec.new do |s|
   s.authors      = package['author']
   s.homepage     = package['homepage']
   s.platforms    = { :ios => "11.0", :tvos => "11.0" }
-
   s.source       = { :git => "https://github.com/jacobp100/react-native-webworker.git", :tag => "v#{s.version}" }
-  s.source_files  = "ios/**/*.{h,m,mm}"
-  s.exclude_files = "ios/Fabric"
 
-  s.compiler_flags  = folly_compiler_flags
-
-  s.pod_target_xcconfig    = {
-    "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\"",
-    "CLANG_CXX_LANGUAGE_STANDARD" => "c++17",
-  }
+  s.source_files = "ios/**/*.{h,m,mm}"
 
   s.dependency "React"
-  s.dependency "RCT-Folly"
-  s.dependency "RCTRequired"
-  s.dependency "ReactCommon/turbomodule/core"
+  s.dependency "React-CoreModules"
 
-  if fabric_enabled
-    s.subspec "common" do |ss|
-      ss.source_files         = "common/cpp/**/*.{cpp,h}"
-      ss.header_dir           = "react/renderer/components/webworker"
-      ss.pod_target_xcconfig  = { "HEADER_SEARCH_PATHS" => "\"$(PODS_TARGET_SRCROOT)/common/cpp\"" }
-    end
+  if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
+    s.compiler_flags = folly_compiler_flags + " -DRCT_NEW_ARCH_ENABLED=1"
+    s.pod_target_xcconfig  = {
+      "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\" \"$(PODS_ROOT)/Headers/Private/React-Core\"",
+      "CLANG_CXX_LANGUAGE_STANDARD" => "c++17",
+    }
 
-    s.subspec "fabric" do |ss|
-      ss.dependency "React-Codegen"
-      ss.dependency "React-RCTFabric"
-      ss.dependency "React-cxxreact"
-      ss.dependency "react-native-webworker/common"
-      ss.source_files         = "ios/Fabric/**/*.{h,m,mm}"
-      ss.pod_target_xcconfig  = { "HEADER_SEARCH_PATHS" => "\"$(PODS_TARGET_SRCROOT)/common/cpp\"" }
-    end
+    s.dependency "React-Codegen"
+    s.dependency "RCT-Folly"
+    s.dependency "RCTRequired"
+    s.dependency "ReactCommon/turbomodule/core"
   end
 end

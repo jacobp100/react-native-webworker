@@ -13,19 +13,22 @@ export default () => {
   const workerRef = useRef();
 
   useEffect(() => {
-    const worker = new WebWorker('./worker.thread.js');
-    worker.onmessage = ({ data }) => {
-      setMessages((m) => [...m, data]);
-    };
-    workerRef.current = worker;
-
     return () => {
-      worker.terminate();
+      // worker.terminate();
+      workerRef?.current.terminate();
       workerRef.current = undefined;
     };
   }, []);
 
   const postMessage = () => {
+    if (workerRef.current == null) {
+      const worker = new WebWorker('./worker.thread.js');
+      worker.onmessage = ({ data }) => {
+        setMessages((m) => [...m, data]);
+      };
+      workerRef.current = worker;
+    }
+
     workerRef.current.postMessage(`Message ${messages.length + 1}`);
   };
 

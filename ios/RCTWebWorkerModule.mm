@@ -2,24 +2,16 @@
 #import <React/RCTDevSettings.h>
 #include <stdlib.h>
 
+#import <React/RCTAppSetupUtils.h>
+
 #define RCT_NEW_ARCH_ENABLED 1
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
-#import <React/RCTFabricSurfaceHostingProxyRootView.h>
-#import <React/RCTSurfacePresenter.h>
-#import <React/RCTSurfacePresenterBridgeAdapter.h>
 #import <ReactCommon/RCTTurboModuleManager.h>
 
-#import <react/config/ReactNativeConfig.h>
-
-@interface RCTWebWorkerModule () <RCTCxxBridgeDelegate, RCTTurboModuleManagerDelegate> {
-  RCTTurboModuleManager *_turboModuleManager;
-  RCTSurfacePresenterBridgeAdapter *_bridgeAdapter;
-  std::shared_ptr<const facebook::react::ReactNativeConfig> _reactNativeConfig;
-  facebook::react::ContextContainer::Shared _contextContainer;
-}
+@interface RCTWebWorkerModule () <RCTCxxBridgeDelegate, RCTTurboModuleManagerDelegate>
 @end
 #endif
 
@@ -67,6 +59,7 @@ RCT_EXPORT_METHOD(startThread:(nonnull NSNumber *)threadId
   // However, it reads the bundle URL at init, and will retain the previous
   // bundle URL if the delegate returns nil
   _threadUrl = [RCTBundleURLProvider.sharedSettings jsBundleURLForBundleRoot:name];
+  NSLog(@"THREAD %@", _threadUrl);
   RCTBridge *threadBridge = [[RCTBridge alloc] initWithDelegate:self
                                                   launchOptions:nil];
   _threadUrl = nil;
@@ -140,10 +133,11 @@ RCT_EXPORT_METHOD(postThreadMessage:(nonnull NSNumber *)threadId
 
 - (std::unique_ptr<facebook::react::JSExecutorFactory>)jsExecutorFactoryForBridge:(RCTBridge *)bridge
 {
-  _turboModuleManager = [[RCTTurboModuleManager alloc] initWithBridge:bridge
-                                                             delegate:self
-                                                            jsInvoker:bridge.jsCallInvoker];
-  return RCTAppSetupDefaultJsExecutorFactory(bridge, _turboModuleManager);
+  RCTTurboModuleManager *turboModuleManager = [[RCTTurboModuleManager alloc]
+                                               initWithBridge:bridge
+                                               delegate:self
+                                               jsInvoker:bridge.jsCallInvoker];
+  return RCTAppSetupDefaultJsExecutorFactory(bridge, turboModuleManager);
 }
 
 #pragma mark RCTTurboModuleManagerDelegate

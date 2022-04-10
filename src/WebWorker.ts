@@ -1,8 +1,14 @@
-import './ensure-react-native-is-initialized';
-import NativeModules from 'react-native/Libraries/BatchedBridge/NativeModules';
-import NativeEventEmitter from 'react-native/Libraries/EventEmitter/NativeEventEmitter';
+// import './ensure-react-native-is-initialized';
+// import NativeModules from 'react-native/Libraries/BatchedBridge/NativeModules';
+// import NativeEventEmitter from 'react-native/Libraries/EventEmitter/NativeEventEmitter';
+import { NativeModules, NativeEventEmitter } from 'react-native';
 
-const { WebWorkerModule } = NativeModules;
+// @ts-expect-error
+const isTurboModuleEnabled = global.__turboModuleProxy != null;
+
+const WebWorkerModule = isTurboModuleEnabled
+  ? require('./specs/WebWorkerModule').default
+  : NativeModules.WebWorkerModule;
 const ThreadEvents = new NativeEventEmitter(WebWorkerModule);
 
 let currentId = 0;
